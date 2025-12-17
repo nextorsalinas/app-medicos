@@ -4,17 +4,22 @@ import pandas as pd
 st.set_page_config(page_title="Categorizador de Médicos", layout="wide")
 
 st.title("🩺 Clasificador Estratégico de Médicos")
-st.markdown("Sube tu archivo CSV de Algología para segmentar a los médicos automáticamente.")
+st.markdown("Sube tu archivo **Excel (.xlsx)** de Algología para segmentar a los médicos automáticamente.")
 
-archivo = st.file_uploader("Selecciona el archivo CSV", type=["csv"])
+# 1. Cambiamos el tipo de archivo permitido a 'xlsx'
+archivo = st.file_uploader("Selecciona el archivo Excel", type=["xlsx"])
 
 if archivo:
-    df = pd.read_csv(archivo)
+    # 2. Cambiamos pd.read_csv por pd.read_excel
+    df = pd.read_excel(archivo)
     
     # Limpieza y Cálculo
     presc_cols = ['oxicodona', 'metadona', 'hidromorfona', 'morfina', 'buprenorfina', 'nalbufina', 'fentanilo']
-    df[presc_cols] = df[presc_cols].fillna(0)
-    df['total_recetas'] = df[presc_cols].sum(axis=1)
+    
+    # Verificamos que las columnas existan para evitar errores
+    cols_presentes = [c for c in presc_cols if c in df.columns]
+    df[cols_presentes] = df[cols_presentes].fillna(0)
+    df['total_recetas'] = df[cols_presentes].sum(axis=1)
     
     def asignar_categoria(row):
         # Puntos por pacientes
@@ -45,6 +50,6 @@ if archivo:
     # Mostrar Tabla
     st.dataframe(df_mostrar[['nombre_medico', 'especialidad_neol', 'numero_pacientes', 'total_recetas', 'Categoria']])
 
-    # Descarga
+    # Descarga (la descarga sigue siendo útil en CSV por compatibilidad, o puedes cambiarla a Excel)
     csv = df.to_csv(index=False).encode('utf-8')
     st.download_button("📥 Descargar Reporte Categorizado", csv, "medicos_categorizados.csv", "text/csv")
