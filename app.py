@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from io import BytesIO
 
-st.set_page_config(page_title="Categorizador de Médicos", layout="wide")
+st.set_page_config(page_title="Categorizador Biogentec", layout="wide")
 
 st.title("🩺 Clasificador Estratégico de Médicos")
 st.markdown("Sube tu archivo **Excel (.xlsx)** para segmentar a los médicos automáticamente.")
@@ -66,3 +66,4 @@ if archivo:
         file_name="medicos_categorizados.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
