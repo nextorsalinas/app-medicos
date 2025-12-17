@@ -30,9 +30,9 @@ if archivo:
         r_score = 3 if row['total_recetas'] > 32 else (2 if row['total_recetas'] >= 13 else 1)
         
         total = p_score + r_score
-        if total >= 5: return 'Estratégico (Alto Impacto)'
-        if total >= 3: return 'En Desarrollo (Medio Impacto)'
-        return 'Potencial Base (Bajo Impacto)'
+        if total >= 5: return '1 Estratégico (Alto Impacto)'
+        if total >= 3: return '2 En Desarrollo (Medio Impacto)'
+        return '3 Potencial Base (Bajo Impacto)'
 
     df['Categoria'] = df.apply(asignar_categoria, axis=1)
 
@@ -66,6 +66,7 @@ if archivo:
         file_name="medicos_categorizados.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 
 
 
