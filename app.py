@@ -39,9 +39,9 @@ if archivo:
     # Panel de Métricas
     st.divider()
     col1, col2, col3 = st.columns(3)
-    col1.metric("Médicos Estratégicos", len(df[df['Categoria'] == 'Categoria 1 (Alto Impacto)']))
-    col2.metric("En Desarrollo", len(df[df['Categoria'] == 'Categoria 2 (Medio Impacto)']))
-    col3.metric("Potencial Base", len(df[df['Categoria'] == 'Categoria 3 (Bajo Impacto)']))
+    col1.metric("Médicos Categoria 1", len(df[df['Categoria'] == 'Categoria 1 (Alto Impacto)']))
+    col2.metric("Médicos Categoria 2", len(df[df['Categoria'] == 'Categoria 2 (Medio Impacto)']))
+    col3.metric("Médicos Categoria 3", len(df[df['Categoria'] == 'Categoria 3 (Bajo Impacto)']))
     st.divider()
 
     # Buscador en tiempo real
@@ -66,6 +66,7 @@ if archivo:
         file_name="medicos_categorizados.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 
 
 
