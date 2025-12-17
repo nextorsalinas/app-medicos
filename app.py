@@ -1,28 +1,30 @@
 import streamlit as st
 import pandas as pd
+from io import BytesIO
 
-st.set_page_config(page_title="Categorizador de Médicos", layout="wide")
+st.set_page_config(page_title="Categorizador Biogentec", layout="wide")
 
-st.title("🩺 Clasificador Estratégico de Médicos")
-st.markdown("Sube tu archivo **Excel (.xlsx)** de Algología para segmentar a los médicos automáticamente.")
+st.title("Clasificador Medico Algologia")
+st.markdown("Sube tu archivo **Excel (.xlsx)** para segmentar a los médicos según su prescripción de medicamentos opioides y número de pacientes.")
 
-# 1. Cambiamos el tipo de archivo permitido a 'xlsx'
+# Cargador de archivos Excel
 archivo = st.file_uploader("Selecciona el archivo Excel", type=["xlsx"])
 
 if archivo:
-    # 2. Cambiamos pd.read_csv por pd.read_excel
+    # Lectura de Excel
     df = pd.read_excel(archivo)
     
-    # Limpieza y Cálculo
+    # Definición de columnas de medicamentos
     presc_cols = ['oxicodona', 'metadona', 'hidromorfona', 'morfina', 'buprenorfina', 'nalbufina', 'fentanilo']
     
-    # Verificamos que las columnas existan para evitar errores
+    # Limpieza: Asegurar que las columnas existen y rellenar vacíos con 0
     cols_presentes = [c for c in presc_cols if c in df.columns]
     df[cols_presentes] = df[cols_presentes].fillna(0)
     df['total_recetas'] = df[cols_presentes].sum(axis=1)
     
+    # Lógica de Categorización
     def asignar_categoria(row):
-        # Puntos por pacientes
+        # Puntos por pacientes (Basado en el análisis de tus datos)
         p_score = 3 if row['numero_pacientes'] > 55 else (2 if row['numero_pacientes'] >= 20 else 1)
         # Puntos por recetas
         r_score = 3 if row['total_recetas'] > 32 else (2 if row['total_recetas'] >= 13 else 1)
@@ -34,22 +36,33 @@ if archivo:
 
     df['Categoria'] = df.apply(asignar_categoria, axis=1)
 
-    # Métricas rápidas
+    # Panel de Métricas
+    st.divider()
     col1, col2, col3 = st.columns(3)
-    col1.metric("Médicos Estratégicos", len(df[df['Categoria'] == 'Estratégico (Alto Impacto)']))
-    col2.metric("En Desarrollo", len(df[df['Categoria'] == 'En Desarrollo (Medio Impacto)']))
-    col3.metric("Potencial Base", len(df[df['Categoria'] == 'Potencial Base (Bajo Impacto)']))
+    col1.metric("Categoria 1 Estratégicos", len(df[df['Categoria'] == 'Categoria 1 (Alto Impacto)']))
+    col2.metric("Categoria 2 En Desarrollo", len(df[df['Categoria'] == 'Categoria 2 (Medio Impacto)']))
+    col3.metric("Categoria 3 Base", len(df[df['Categoria'] == 'Categoria 3 (Bajo Impacto)']))
+    st.divider()
 
-    # Buscador
+    # Buscador en tiempo real
     busqueda = st.text_input("🔍 Buscar médico por nombre:")
     if busqueda:
         df_mostrar = df[df['nombre_medico'].str.contains(busqueda, case=False, na=False)]
     else:
         df_mostrar = df
 
-    # Mostrar Tabla
-    st.dataframe(df_mostrar[['nombre_medico', 'especialidad_neol', 'numero_pacientes', 'total_recetas', 'Categoria']])
+    # Vista previa de la tabla clasificada
+    st.subheader("Vista Previa de Resultados")
+    st.dataframe(df_mostrar[['Nombre', 'Especialidad neol', 'Numero de pacientes', 'Total de recetas', 'Categoria']], use_container_width=True)
 
-    # Descarga (la descarga sigue siendo útil en CSV por compatibilidad, o puedes cambiarla a Excel)
-    csv = df.to_csv(index=False).encode('utf-8')
-    st.download_button("📥 Descargar Reporte Categorizado", csv, "medicos_categorizados.csv", "text/csv")
+    # Lógica para descargar en formato Excel (.xlsx)
+    buffer = BytesIO()
+    with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Categorizacion')
+    
+    st.download_button(
+        label="📥 Descargar Reporte en Excel",
+        data=buffer.getvalue(),
+        file_name="medicos_categorizados.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
