@@ -31,15 +31,15 @@ if archivo:
         
         total = p_score + r_score
         if total >= 5: return 'Categoria 1 (Alto Impacto)'
-        if total >= 3: return '2 En Desarrollo (Medio Impacto)'
-        return '3 Potencial Base (Bajo Impacto)'
+        if total >= 3: return 'En Desarrollo (Medio Impacto)'
+        return 'Potencial Base (Bajo Impacto)'
 
     df['Categoria'] = df.apply(asignar_categoria, axis=1)
 
     # Panel de Métricas
     st.divider()
     col1, col2, col3 = st.columns(3)
-    col1.metric("Médicos Estratégicos", len(df[df['Categoria'] == 'Estratégico (Alto Impacto)']))
+    col1.metric("Médicos Estratégicos", len(df[df['Categoria'] == 'Categoria 1 (Alto Impacto)']))
     col2.metric("En Desarrollo", len(df[df['Categoria'] == 'En Desarrollo (Medio Impacto)']))
     col3.metric("Potencial Base", len(df[df['Categoria'] == 'Potencial Base (Bajo Impacto)']))
     st.divider()
@@ -66,6 +66,7 @@ if archivo:
         file_name="medicos_categorizados.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 
 
 
