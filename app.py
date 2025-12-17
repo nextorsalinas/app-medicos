@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 from io import BytesIO
 
-st.set_page_config(page_title="Categorizador Biogentec", layout="wide")
+st.set_page_config(page_title="Categorizador de Médicos", layout="wide")
 
-st.title("Clasificador Medico Algologia")
-st.markdown("Sube tu archivo **Excel (.xlsx)** para segmentar a los médicos según su prescripción de medicamentos opioides y número de pacientes.")
+st.title("🩺 Clasificador Estratégico de Médicos")
+st.markdown("Sube tu archivo **Excel (.xlsx)** para segmentar a los médicos automáticamente.")
 
 # Cargador de archivos Excel
 archivo = st.file_uploader("Selecciona el archivo Excel", type=["xlsx"])
@@ -39,9 +39,9 @@ if archivo:
     # Panel de Métricas
     st.divider()
     col1, col2, col3 = st.columns(3)
-    col1.metric("Categoria 1 Estratégicos", len(df[df['Categoria'] == 'Categoria 1 (Alto Impacto)']))
-    col2.metric("Categoria 2 En Desarrollo", len(df[df['Categoria'] == 'Categoria 2 (Medio Impacto)']))
-    col3.metric("Categoria 3 Base", len(df[df['Categoria'] == 'Categoria 3 (Bajo Impacto)']))
+    col1.metric("Médicos Estratégicos", len(df[df['Categoria'] == 'Estratégico (Alto Impacto)']))
+    col2.metric("En Desarrollo", len(df[df['Categoria'] == 'En Desarrollo (Medio Impacto)']))
+    col3.metric("Potencial Base", len(df[df['Categoria'] == 'Potencial Base (Bajo Impacto)']))
     st.divider()
 
     # Buscador en tiempo real
@@ -53,7 +53,7 @@ if archivo:
 
     # Vista previa de la tabla clasificada
     st.subheader("Vista Previa de Resultados")
-    st.dataframe(df_mostrar[['Nombre', 'Especialidad neol', 'Numero de pacientes', 'Total de recetas', 'Categoria']], use_container_width=True)
+    st.dataframe(df_mostrar[['nombre_medico', 'especialidad_neol', 'numero_pacientes', 'total_recetas', 'Categoria']], use_container_width=True)
 
     # Lógica para descargar en formato Excel (.xlsx)
     buffer = BytesIO()
