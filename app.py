@@ -5,7 +5,7 @@ from io import BytesIO
 st.set_page_config(page_title="Categorizador Biogentec", layout="wide")
 
 st.title("Clasificador Médicos Algologia")
-st.markdown("Sube tu archivo **Excel (.xlsx)** para segmentar a los médicos automáticamente.")
+st.markdown("Sube tu archivo para segmentar a los médicos.")
 
 # Cargador de archivos Excel
 archivo = st.file_uploader("Selecciona el archivo Excel", type=["xlsx"])
@@ -66,5 +66,6 @@ if archivo:
         file_name="medicos_categorizados.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 
 
